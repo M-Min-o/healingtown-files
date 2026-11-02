@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>힐링 RPG 공지사항</title>
-    <link>https://github.com/M-Min-o/healingrpg-files/</link>
-    <description>힐링 RPG</description>
+    <title>힐링타운 공지사항</title>
+    <link>https://M-Min-o.github.io/healingtown-files/</link>
+    <description>힐링타운</description>
     <item>
-      <title>힐링 RPG 런처가 열렸습니다!</title>
-      <link>https://github.com/M-Min-o/healingrpg-files/</link>
+      <title>힐링타운 런처가 열렸습니다!</title>
+      <link>https://M-Min-o.github.io/healingtown-files/</link>
       <pubDate>Wed, 28 Oct 2026 03:00:00 GMT</pubDate>
       <dc:creator>운영진</dc:creator>
       <content:encoded><![CDATA[<p>이제 런처로 바로 서버에 들어올 수 있어요.</p><p>필요한 모드와 리소스는 런처가 알아서 받아 줍니다.</p><br><p>문제가 생기면 디스코드로 알려 주세요!</p>]]></content:encoded>

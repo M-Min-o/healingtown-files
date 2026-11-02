@@ -1,14 +1,14 @@
 {
   "version": "1.0.0",
-  "rss": "https://github.com/M-Min-o/healingrpg-files/news.xml",
+  "rss": "https://m-min-o.github.io/healingtown-files/news.xml",
   "servers": [
     {
-      "id": "healingrpg",
-      "name": "힐링 RPG",
-      "description": "하드코어 RPG",
-      "icon": "https://github.com/M-Min-o/healingrpg-files/server-icon.png",
+      "id": "healingtown",
+      "name": "힐링타운",
+      "description": "느긋하게 자라는 마인크래프트 RPG 서버",
+      "icon": "https://m-min-o.github.io/healingtown-files/server-icon.png",
       "version": "1.0.0",
-      "address": "min346.kro.kr:25565",
+      "address": "play.example.com:25565",
       "minecraftVersion": "1.21.4",
       "javaOptions": {
         "suggestedMajor": 21,
@@ -36,8 +36,8 @@
               "type": "VersionManifest",
               "artifact": {
                 "size": 2862,
-                "MD5": "0bbd6dbf1c20dd402e8c01f47139a32a",
-                "url": "https://github.com/M-Min-o/healingrpg-files/fabric%2Fversions%2F1.21.4-fabric-0.20.1%2F1.21.4-fabric-0.20.1.json"
+                "MD5": "150f4c0df83096dbe72669828bb48321",
+                "url": "https://m-min-o.github.io/healingtown-files/fabric%2Fversions%2F1.21.4-fabric-0.20.1%2F1.21.4-fabric-0.20.1.json"
               }
             },
             {
