@@ -7,7 +7,7 @@
       "name": "힐링타운",
       "description": "느긋하게 자라는 마인크래프트 RPG 서버",
       "icon": "https://m-min-o.github.io/healingtown-files/server-icon.png",
-      "version": "1.0.3",
+      "version": "1.0.4",
       "address": "min346.kro.kr:25565",
       "minecraftVersion": "1.21.4",
       "javaOptions": {
@@ -123,6 +123,20 @@
           }
         },
         {
+          "id": "kr.healingtown.mods:skinlayers3d:1.11.1",
+          "name": "3d-Skin-Layers",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 1965539,
+            "MD5": "2011c4c2805434bec125d404f4c2fb59",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/skinlayers3d-fabric-1.11.1-mc1.21.4.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
           "id": "kr.healingtown.mods:bob-lock:1.1.0",
           "name": "Bob Lock",
           "type": "FabricMod",
@@ -130,6 +144,34 @@
             "size": 46166,
             "MD5": "d71554c6455e760019197d0edb4083ab",
             "url": "https://m-min-o.github.io/healingtown-files/mods/bob-lock-1.21.4-1.1.0.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:caramelchat:1.2.2",
+          "name": "caramelChat",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 163711,
+            "MD5": "59c8ae912459442c192ff5537bf17f7a",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/caramelChat-mc1.21.1-fabric-1.2.2.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:chat_heads:0.15.1",
+          "name": "Chat Heads",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 83375,
+            "MD5": "394bdcf4352659c4d3f6374629d7c525",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/chat_heads-0.15.1-fabric-1.21.4.jar"
           },
           "required": {
             "value": false,
@@ -165,6 +207,20 @@
           }
         },
         {
+          "id": "kr.healingtown.mods:fabric-language-kotlin:1.13.11-kotlin.2.3.21",
+          "name": "Fabric Language Kotlin",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 7813444,
+            "MD5": "06f4497b65f800a0b110025d8e9a4005",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/fabric-language-kotlin-1.13.11+kotlin.2.3.21.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
           "id": "kr.healingtown.mods:ferritecore:7.1.3",
           "name": "FerriteCore",
           "type": "FabricMod",
@@ -172,6 +228,20 @@
             "size": 109879,
             "MD5": "cd9fba194e3409f486a9c25a26518c8e",
             "url": "https://m-min-o.github.io/healingtown-files/mods/ferritecore-7.1.3-fabric.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:geckolib:4.8.5",
+          "name": "GeckoLib 4",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 628583,
+            "MD5": "e89743bfc76855ed770e7705c671d17e",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/geckolib-fabric-1.21.4-4.8.5.jar"
           },
           "required": {
             "value": false,
@@ -200,6 +270,20 @@
             "size": 436498,
             "MD5": "1bee2326edcced182b86154e44810971",
             "url": "https://m-min-o.github.io/healingtown-files/mods/modernfix-5.20.3-mc1.21.4.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:mousetweaks:2.27",
+          "name": "Mouse Tweaks",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 76225,
+            "MD5": "8a1268311a2a34bd63fec02e699a5d51",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/MouseTweaks-fabric-mc1.21.3-2.27.jar"
           },
           "required": {
             "value": false,
