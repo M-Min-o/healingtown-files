@@ -7,8 +7,8 @@
       "name": "힐링타운",
       "description": "느긋하게 자라는 마인크래프트 RPG 서버",
       "icon": "https://m-min-o.github.io/healingtown-files/server-icon.png",
-      "version": "1.0.0",
-      "address": "play.example.com:25565",
+      "version": "1.0.2",
+      "address": "min346.kro.kr:25565",
       "minecraftVersion": "1.21.4",
       "javaOptions": {
         "suggestedMajor": 21,
@@ -111,6 +111,58 @@
               }
             }
           ]
+        },
+        {
+          "id": "kr.healingtown.mods:fabric-api-0.119.4-1.21.4:128a8d0421",
+          "name": "fabric-api-0.119.4-1.21.4",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 2149128,
+            "MD5": "128a8d042180e7c92567342e21a21a6d",
+            "url": "https://M-Min-o.github.io/healingtown-files/mods/fabric-api-0.119.4-1.21.4.jar"
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:bob-lock-1.21.4-1.1.0:d71554c645",
+          "name": "bob-lock-1.21.4-1.1.0",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 46166,
+            "MD5": "d71554c6455e760019197d0edb4083ab",
+            "url": "https://M-Min-o.github.io/healingtown-files/mods/bob-lock-1.21.4-1.1.0.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:no-hurt-cam-1.21.4-1.0.2:3b918f74ee",
+          "name": "no-hurt-cam-1.21.4-1.0.2",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 21660,
+            "MD5": "3b918f74eeb3955ba1ed6dfe716db2cb",
+            "url": "https://M-Min-o.github.io/healingtown-files/mods/no-hurt-cam-1.21.4-1.0.2.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:quick-pack-1.3.3:d3a9aaf418",
+          "name": "quick-pack-1.3.3",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 12187,
+            "MD5": "d3a9aaf418c4366d642bf3115c47be4a",
+            "url": "https://M-Min-o.github.io/healingtown-files/mods/quick-pack-1.3.3.jar"
+          },
+          "required": {
+            "value": false,
+            "def": true
+          }
         }
       ]
     }
