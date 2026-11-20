@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "htchat",
+  "version": "${version}",
+  "name": "힐링타운 채팅창",
+  "description": "옮기고 크기를 바꿀 수 있는 채팅창 · 종류별 탭 (전체 · 일반 · 귓속말 · 파티 · 시스템 · 골드·경험치 · 아이템 · 자랑 · 공지 · 접속·퇴장) · 채팅 설정",
+  "authors": ["힐링타운"],
+  "contact": { "homepage": "https://github.com/M-Min-o" },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/htchat/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["kr.healingtown.chat.HtChat"]
+  },
+  "mixins": ["htchat.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "fabric-api": "*",
+    "minecraft": "~1.21.4",
+    "java": ">=21"
+  }
+}
