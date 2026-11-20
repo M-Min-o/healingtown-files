@@ -54,6 +54,11 @@ public final class ChatWindow {
     // 창 위치 (이번 화면)
     int x, y, w, h, sw, sh;
 
+    // 탭 줄 넘기기 (창이 좁을 때)
+    static final int GAP = 9, ARROW_W = 9;
+    int tabOff, tabMaxOff;
+    boolean tabOverflow;
+
     // ================================================================== 위치
     void layout() {
         ChatConfig c = HtChat.cfg;
@@ -153,19 +158,40 @@ public final class ChatWindow {
         ctx.fill(x, y, x + w, y + h, argb(c.opacity, BG));
         ctx.drawBorder(x, y, w, h, argb(Math.min(1f, c.opacity + 0.25f), BORDER));
 
-        // ---- 탭
+        // ---- 탭 (창이 좁아서 다 안 들어가면 양 끝 ◀ ▶ · 탭 줄에서 휠로 넘김)
         int right = x + w - (focused ? 30 : 4);
         float ts = 0.85f;
-        int tx = x + 5;
         long now = System.currentTimeMillis();
         if (focused) {
             if (Cat.ALL.equals(c.tab)) for (String id : Cat.IDS) { if (!Boolean.FALSE.equals(c.inAll.get(id))) seen.put(id, now); }
             else seen.put(c.tab, now);
         }
-        for (String id : Cat.TABS) {
+        String[] tabs = Cat.TABS;
+        int n = tabs.length;
+        int[] tws = new int[n];
+        int totalW = -GAP;
+        for (int i = 0; i < n; i++) { tws[i] = Math.round(tr.getWidth(Cat.name(tabs[i])) * ts); totalW += tws[i] + GAP; }
+        int tx = x + 5, tRight = right;
+        tabOverflow = tx + totalW > right;
+        if (tabOverflow) {
+            tx = x + 5 + ARROW_W;                 // 왼쪽 ◀ 자리
+            tRight = right - ARROW_W;             // 오른쪽 ▶ 자리
+            int avail = tRight - tx;
+            int maxOff = n - 1, acc = -GAP;        // 끝까지 넘겼을 때 첫 탭 (뒤에서부터 들어가는 만큼)
+            for (int i = n - 1; i >= 0; i--) { acc += tws[i] + GAP; if (acc > avail) break; maxOff = i; }
+            tabMaxOff = maxOff;
+            tabOff = clamp(tabOff, 0, maxOff);
+        } else {
+            tabOff = 0;
+            tabMaxOff = 0;
+        }
+        int lastShown = -1;
+        for (int i = tabOverflow ? tabOff : 0; i < n; i++) {
+            String id = tabs[i];
             String label = Cat.name(id);
-            int tw = Math.round(tr.getWidth(label) * ts);
-            if (tx + tw > right) break;
+            int tw = tws[i];
+            if (tx + tw > tRight) break;
+            lastShown = i;
             boolean sel = id.equals(c.tab);
             boolean hover = focused && mx >= tx - 3 && mx < tx + tw + 3 && my >= y && my < y + HEAD;
             int col = sel ? TEAL : hover ? TEXT : GRAY;
@@ -179,7 +205,20 @@ public final class ChatWindow {
             if (!Cat.ALL.equals(id) && !sel && HtChat.store.lastTime(id) > seen.getOrDefault(id, 0L))
                 ctx.fill(tx + tw, y + 3, tx + tw + 2, y + 5, 0xFFFFC857);                   // 안 읽은 채팅
             hits.add(new Hit("tab:" + id, tx - 3, y, tx + tw + 3, y + HEAD));
-            tx += tw + 9;
+            tx += tw + GAP;
+        }
+        if (tabOverflow) {
+            boolean canL = tabOff > 0, canR = lastShown < n - 1;
+            int cy = y + HEAD / 2 - 1;
+            int lx = x + 3, rx = right - 6;
+            boolean hl = focused && canL && mx >= x + 1 && mx < x + 5 + ARROW_W - 2 && my >= y && my < y + HEAD;
+            boolean hr = focused && canR && mx >= right - ARROW_W && mx < right + 1 && my >= y && my < y + HEAD;
+            drawArrow(ctx, lx, cy, false, !canL ? DIM : hl ? TEXT : TEAL);
+            drawArrow(ctx, rx, cy, true, !canR ? DIM : hr ? TEXT : TEAL);
+            if (focused) {
+                hits.add(0, new Hit("tabprev", x + 1, y, x + 5 + ARROW_W - 2, y + HEAD));
+                hits.add(0, new Hit("tabnext", right - ARROW_W, y, right + 1, y + HEAD));
+            }
         }
         ctx.fill(x + 1, y + HEAD, x + w - 1, y + HEAD + 1, argb(Math.min(1f, c.opacity + 0.2f), BORDER));
 
@@ -238,6 +277,20 @@ public final class ChatWindow {
             hits.add(new Hit("grip", x + w - 9, y + h - 9, x + w, y + h));
         }
         if (focused) hits.add(new Hit("head", x, y, x + w, y + HEAD));
+    }
+
+    /** 작은 삼각형 화살표 (폭 4, 높이 7) - right = ▶ */
+    static void drawArrow(DrawContext ctx, int ax, int cy, boolean right, int col) {
+        for (int i = 0; i < 4; i++) {
+            int xx = right ? ax + i : ax + 3 - i;
+            ctx.fill(xx, cy - (3 - i), xx + 1, cy + (3 - i) + 1, col);
+        }
+    }
+
+    /** 탭을 한 칸 넘김 (d = -1 왼쪽, 1 오른쪽) */
+    void shiftTabs(int d) {
+        int nv = clamp(tabOff + d, 0, tabMaxOff);
+        if (nv != tabOff) { tabOff = nv; click(); }
     }
 
     static void drawLock(DrawContext ctx, int lx, int ly, boolean locked, boolean hover) {
@@ -307,6 +360,8 @@ public final class ChatWindow {
                 return true;
             }
             switch (id) {
+                case "tabprev" -> { shiftTabs(-1); return true; }
+                case "tabnext" -> { shiftTabs(1); return true; }
                 case "gear" -> { settingsOpen = !settingsOpen; click(); return true; }
                 case "lock" -> { c.locked = !c.locked; dirty = true; click(); return true; }
                 case "grip" -> { if (!c.locked) { drag = 2; return true; } }
@@ -332,6 +387,10 @@ public final class ChatWindow {
         if (!HtChat.active()) return false;
         if (settingsOpen && Settings.inside(this, mx, my)) return true;
         if (!insideWindow(mx, my)) return false;
+        if (tabOverflow && my < y + HEAD) {                        // 탭 줄 위에서 휠 = 탭 넘기기
+            if (amount != 0) shiftTabs(amount > 0 ? -1 : 1);
+            return true;
+        }
         int step = Screen.hasShiftDown() ? 7 : 2;
         scroll = Math.max(0, scroll + (amount > 0 ? step : amount < 0 ? -step : 0));
         return true;
