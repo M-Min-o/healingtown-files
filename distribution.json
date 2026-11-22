@@ -7,7 +7,7 @@
       "name": "힐링타운",
       "description": "느긋하게 자라는 마인크래프트 RPG 서버",
       "icon": "https://m-min-o.github.io/healingtown-files/server-icon.png",
-      "version": "1.0.9",
+      "version": "1.0.10",
       "address": "min346.kro.kr:25565",
       "minecraftVersion": "1.21.4",
       "javaOptions": {
@@ -120,6 +120,16 @@
             "size": 2149128,
             "MD5": "128a8d042180e7c92567342e21a21a6d",
             "url": "https://m-min-o.github.io/healingtown-files/mods/fabric-api-0.119.4-1.21.4.jar"
+          }
+        },
+        {
+          "id": "kr.healingtown.mods:plasmovoice:2.1.7",
+          "name": "Plasmo Voice",
+          "type": "FabricMod",
+          "artifact": {
+            "size": 12212952,
+            "MD5": "2be4bf54d48abb852b25964183148712",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/required/plasmovoice-fabric-1.21.4-2.1.7.jar"
           }
         },
         {
