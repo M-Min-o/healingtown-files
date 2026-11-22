@@ -42,8 +42,11 @@ public class ChatConfig {
     public Map<String, Boolean> inAll = new LinkedHashMap<>();
     /** 시스템 메시지 → 종류 (색 코드 뺀 글자, 정규식) - 서버 TotalSystemPlugin chat-channels.rules 와 같은 기본값 */
     public Map<String, List<String>> rules = new LinkedHashMap<>();
+    /** 채팅창에 아예 안 띄울 메시지 (색 코드 뺀 글자, 정규식) - 기본: 모드 새 버전 알림 (모드는 런처가 관리) */
+    public List<String> hide;
 
     private transient Map<String, List<Pattern>> compiled;
+    private transient List<Pattern> hideCompiled;
 
     static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
@@ -74,6 +77,11 @@ public class ChatConfig {
         if (rules == null) rules = new LinkedHashMap<>();
         Map<String, List<String>> def = defaultRules();
         for (Map.Entry<String, List<String>> en : def.entrySet()) rules.putIfAbsent(en.getKey(), en.getValue());
+        if (hide == null) hide = new ArrayList<>(List.of(
+                "Plasmo Voice\\s*의\\s*새\\s*버전",
+                "(?i)new version of Plasmo Voice",
+                "(?i)Plasmo Voice .*(is available|update available)"));
+        hideCompiled = null;
         if (tab == null || !Cat.isTab(tab)) tab = Cat.ALL;
         opacity = clamp(opacity, 0f, 1f);
         textScale = clamp(textScale, 0.5f, 2f);
@@ -113,6 +121,19 @@ public class ChatConfig {
         }
         compiled = m;
         return m;
+    }
+
+    /** 숨길 메시지인지 */
+    boolean hidden(String plain) {
+        if (hideCompiled == null) {
+            List<Pattern> l = new ArrayList<>();
+            if (hide != null) for (String s : hide) {
+                try { l.add(Pattern.compile(s)); } catch (Exception e) { HtChat.LOG.warn("[힐링타운 채팅] 숨김 규칙이 잘못되었습니다: " + s); }
+            }
+            hideCompiled = l;
+        }
+        for (Pattern p : hideCompiled) if (p.matcher(plain).find()) return true;
+        return false;
     }
 
     static Map<String, List<String>> defaultRules() {

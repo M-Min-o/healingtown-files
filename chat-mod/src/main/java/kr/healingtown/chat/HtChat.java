@@ -60,6 +60,7 @@ public class HtChat implements ClientModInitializer {
     public static void onMessage(Text message) {
         if (cfg == null || message == null) return;
         String plain = message.getString().replaceAll("§.", "");
+        if (!nextGeneral && cfg.hidden(plain)) return;                  // 숨김 (모드 새 버전 알림 등)
         if (plain.isBlank() && !nextGeneral) {
             blankRun++;
             if (blankRun == CLEAR_RUN) { store.clear(); if (window != null) window.onNew(); }
