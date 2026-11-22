@@ -52,6 +52,12 @@ public class HtChat implements ClientModInitializer {
         return cfg != null && cfg.enabled;
     }
 
+    /** 미니맵 모드 제어 코드 (Xaero: 미니맵 끄기 · 공정 모드 / VoxelMap) */
+    static boolean isMapCode(String raw) {
+        return raw.contains("§n§o§m§i§n§i§m§a§p") || raw.contains("§f§a§i§r§x§a§e§r§o")
+                || raw.contains("§r§e§s§e§t§x§a§e§r§o") || raw.contains("§3 §6 §3 §6 §3 §6");
+    }
+
     /** 빈 줄이 연달아 이만큼 오면 = 서버의 채팅 청소 (/지우개 등: 빈 줄 100개) → 채팅창을 진짜로 비움 */
     static final int CLEAR_RUN = 20;
     static int blankRun;
@@ -59,7 +65,9 @@ public class HtChat implements ClientModInitializer {
     /** ChatHud.addMessage (모든 채팅 · 시스템 메시지 · 클라이언트 메시지) */
     public static void onMessage(Text message) {
         if (cfg == null || message == null) return;
-        String plain = message.getString().replaceAll("§.", "");
+        String raw = message.getString();
+        if (!nextGeneral && isMapCode(raw)) return;                     // 서버가 보내는 미니맵 막기 코드 (화면에 안 보이는 글자) - 빈 줄로도 안 띄움
+        String plain = raw.replaceAll("§.", "");
         if (!nextGeneral && cfg.hidden(plain)) return;                  // 숨김 (모드 새 버전 알림 등)
         if (plain.isBlank() && !nextGeneral) {
             blankRun++;
