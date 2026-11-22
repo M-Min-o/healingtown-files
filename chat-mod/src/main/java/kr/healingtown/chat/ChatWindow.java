@@ -104,7 +104,7 @@ public final class ChatWindow {
         int ww = wrapWidth();
         int key = ww * 2 + (c.showTime ? 1 : 0);
         if (l.wrapKey != key || l.wrapped == null) {
-            Text t = c.showTime ? Text.literal(l.clock + " ").formatted(Formatting.GRAY).append(l.text) : l.text;
+            Text t = c.showTime && !l.blank ? Text.literal(l.clock + " ").formatted(Formatting.GRAY).append(l.text) : l.text;
             l.wrapped = mc.textRenderer.wrapLines(t, ww);
             l.wrapKey = key;
         }

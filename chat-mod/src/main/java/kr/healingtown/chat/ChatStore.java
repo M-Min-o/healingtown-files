@@ -22,6 +22,8 @@ public final class ChatStore {
         final String cat;
         final long time;
         final String clock;
+        /** 빈 줄 (띄어쓰기만) - 시간을 안 붙임 */
+        final boolean blank;
         List<OrderedText> wrapped;
         int wrapKey = Integer.MIN_VALUE;
 
@@ -30,6 +32,7 @@ public final class ChatStore {
             this.cat = cat;
             this.time = System.currentTimeMillis();
             this.clock = LocalTime.now().format(HM);
+            this.blank = text.getString().replaceAll("§.", "").isBlank();
         }
     }
 

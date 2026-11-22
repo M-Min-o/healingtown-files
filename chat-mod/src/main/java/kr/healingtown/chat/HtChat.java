@@ -52,12 +52,22 @@ public class HtChat implements ClientModInitializer {
         return cfg != null && cfg.enabled;
     }
 
+    /** 빈 줄이 연달아 이만큼 오면 = 서버의 채팅 청소 (/지우개 등: 빈 줄 100개) → 채팅창을 진짜로 비움 */
+    static final int CLEAR_RUN = 20;
+    static int blankRun;
+
     /** ChatHud.addMessage (모든 채팅 · 시스템 메시지 · 클라이언트 메시지) */
     public static void onMessage(Text message) {
         if (cfg == null || message == null) return;
+        String plain = message.getString().replaceAll("§.", "");
+        if (plain.isBlank() && !nextGeneral) {
+            blankRun++;
+            if (blankRun == CLEAR_RUN) { store.clear(); if (window != null) window.onNew(); }
+            if (blankRun >= CLEAR_RUN) return;                         // 청소용 빈 줄은 더 쌓지 않음
+        } else blankRun = 0;
         String cat;
         if (nextGeneral) cat = "general";
-        else cat = ChatStore.classify(message.getString().replaceAll("§.", ""), cfg);
+        else cat = ChatStore.classify(plain, cfg);
         nextGeneral = false;
         store.add(message, cat, cfg.historyPerCategory);
         if (window != null) window.onNew();
