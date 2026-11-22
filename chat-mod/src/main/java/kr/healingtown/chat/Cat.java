@@ -22,8 +22,13 @@ public final class Cat {
         KOR.put("system", "시스템");
     }
 
-    /** 탭 순서 (이미지처럼 전체 먼저) */
-    public static final String[] TABS = {ALL, "general", "whisper", "party", "system", "money", "item", "brag", "notice", "join"};
+    /** 탭 순서 (전체 · 공지 먼저) - 골드·경험치는 탭 없음 (전체에는 나옴) */
+    public static final String[] TABS = {ALL, "notice", "general", "whisper", "party", "system", "item", "brag", "join"};
+
+    public static boolean isTab(String id) {
+        for (String t : TABS) if (t.equals(id)) return true;
+        return false;
+    }
 
     public static String name(String id) {
         return ALL.equals(id) ? "전체" : KOR.getOrDefault(id, id);

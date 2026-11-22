@@ -23,7 +23,7 @@ final class Settings {
     static List<Item> items() {
         List<Item> l = new ArrayList<>();
         l.add(new Item("label", null, "전체 탭에 보일 채팅"));
-        for (String id : Cat.IDS) l.add(new Item("toggle", "in:" + id, Cat.name(id)));
+        for (String id : Cat.IDS) if (Cat.isTab(id)) l.add(new Item("toggle", "in:" + id, Cat.name(id)));
         l.add(new Item("line", null, ""));
         l.add(new Item("label", null, "전체 설정"));
         l.add(new Item("slider", "opacity", "배경 불투명도"));

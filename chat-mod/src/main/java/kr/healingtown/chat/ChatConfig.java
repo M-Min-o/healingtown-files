@@ -74,7 +74,7 @@ public class ChatConfig {
         if (rules == null) rules = new LinkedHashMap<>();
         Map<String, List<String>> def = defaultRules();
         for (Map.Entry<String, List<String>> en : def.entrySet()) rules.putIfAbsent(en.getKey(), en.getValue());
-        if (tab == null || (!tab.equals(Cat.ALL) && !Cat.KOR.containsKey(tab))) tab = Cat.ALL;
+        if (tab == null || !Cat.isTab(tab)) tab = Cat.ALL;
         opacity = clamp(opacity, 0f, 1f);
         textScale = clamp(textScale, 0.5f, 2f);
         fadeSeconds = Math.max(1, Math.min(60, fadeSeconds));
@@ -84,7 +84,7 @@ public class ChatConfig {
         compiled = null;
     }
 
-    static final int MIN_W = 160, MIN_H = 70;
+    static final int MIN_W = 110, MIN_H = 60;
 
     static float clamp(float v, float lo, float hi) { return Math.max(lo, Math.min(hi, v)); }
 

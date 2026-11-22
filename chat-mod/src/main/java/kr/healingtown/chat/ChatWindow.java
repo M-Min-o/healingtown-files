@@ -30,6 +30,8 @@ public final class ChatWindow {
     // ------------------------------------------------------------------ 색 (이미지처럼: 어두운 반투명 + 청록)
     static final int BG = 0x0B0F14, BORDER = 0x3A4A5A, TEAL = 0xFF4FD1BE, TEXT = 0xFFE8EEF2, GRAY = 0xFF9AA6B2, DIM = 0xFF5C6773;
     static final int PANEL_BG = 0xF2141920, PANEL_LINE = 0xFF2E3946, OFF = 0xFF3A4450;
+    /** 탭 이름 색 (안 고른 탭도 잘 보이게 밝게) · 고른 탭 · 마우스 올림 */
+    static final int TAB_TEXT = 0xFFDCE6EE, TAB_SEL = 0xFF5CF5DF, TAB_HOVER = 0xFFFFE08A;
     static final int HEAD = 14, PAD = 4;
 
     final MinecraftClient mc = MinecraftClient.getInstance();
@@ -53,6 +55,25 @@ public final class ChatWindow {
 
     // 창 위치 (이번 화면)
     int x, y, w, h, sw, sh;
+
+    static final int EDGE = 3;
+    // 마우스 모양 (0 기본 · 1 좌우 · 2 위아래)
+    int cursorNow;
+    long curH, curV;
+
+    void setCursor(int k) {
+        if (k == cursorNow) return;
+        try {
+            long win = mc.getWindow().getHandle();
+            if (k == 0) GLFW.glfwSetCursor(win, 0L);
+            else {
+                if (curH == 0) curH = GLFW.glfwCreateStandardCursor(GLFW.GLFW_HRESIZE_CURSOR);
+                if (curV == 0) curV = GLFW.glfwCreateStandardCursor(GLFW.GLFW_VRESIZE_CURSOR);
+                GLFW.glfwSetCursor(win, k == 1 ? curH : curV);
+            }
+            cursorNow = k;
+        } catch (Throwable ignored) {}
+    }
 
     // 탭 줄 넘기기 (창이 좁을 때)
     static final int GAP = 9, ARROW_W = 9;
@@ -185,6 +206,7 @@ public final class ChatWindow {
             tabOff = 0;
             tabMaxOff = 0;
         }
+        ctx.fill(x + 1, y + 1, x + w - 1, y + HEAD, argb(Math.max(0.55f, Math.min(1f, c.opacity + 0.25f)), 0x0B0F14));   // 탭 줄 어두운 띠
         int lastShown = -1;
         for (int i = tabOverflow ? tabOff : 0; i < n; i++) {
             String id = tabs[i];
@@ -194,12 +216,12 @@ public final class ChatWindow {
             lastShown = i;
             boolean sel = id.equals(c.tab);
             boolean hover = focused && mx >= tx - 3 && mx < tx + tw + 3 && my >= y && my < y + HEAD;
-            int col = sel ? TEAL : hover ? TEXT : GRAY;
+            int col = sel ? TAB_SEL : hover ? TAB_HOVER : TAB_TEXT;
             MatrixStack m = ctx.getMatrices();
             m.push();
             m.translate((float) tx, (float) (y + 4), 0f);
             m.scale(ts, ts, 1f);
-            ctx.drawText(tr, label, 0, 0, col, false);
+            ctx.drawText(tr, label, 0, 0, col, true);                     // 그림자 → 밝은 바탕 위에서도 잘 보이게
             m.pop();
             if (sel) ctx.fill(tx - 1, y + HEAD - 2, tx + tw + 1, y + HEAD - 1, TEAL);
             if (!Cat.ALL.equals(id) && !sel && HtChat.store.lastTime(id) > seen.getOrDefault(id, 0L))
@@ -268,18 +290,40 @@ public final class ChatWindow {
 
         // ---- 크기 조절 (오른쪽 아래)
         if (focused && !c.locked) {
-            int gx = x + w - 2, gy = y + h - 2;
-            int col = drag == 2 ? TEAL : 0xA0FFFFFF;
-            for (int i = 0; i < 3; i++) {
-                ctx.fill(gx - 2 - i * 3, gy - 1, gx - 1 - i * 3, gy, col);
-                ctx.fill(gx - 1, gy - 2 - i * 3, gx, gy - 1 - i * 3, col);
-            }
-            hits.add(new Hit("grip", x + w - 9, y + h - 9, x + w, y + h));
-        }
+            int gx = x + w - 2, gy = y + h - 2;                              // 오른쪽 아래 끝
+            boolean gh = mx >= x + w - 11 && mx < x + w && my >= y + h - 11 && my < y + h;
+            int col = drag == 2 ? TEAL : gh ? TAB_HOVER : 0xE6FFFFFF;
+            drawResizeArrow(ctx, gx - 8, gy - 8, col);
+            hits.add(0, new Hit("grip", x + w - 11, y + h - 11, x + w, y + h));
+            // 테두리 끌어서 크기: 오른쪽 · 왼쪽 = 폭, 아래 = 높이 (위 탭 줄은 옮기기)
+            hits.add(1, new Hit("edgeR", x + w - EDGE, y + HEAD + 1, x + w, y + h - 9));
+            hits.add(2, new Hit("edgeL", x, y + HEAD + 1, x + EDGE, y + h));
+            hits.add(3, new Hit("edgeB", x + EDGE, y + h - EDGE, x + w - 9, y + h));
+            String he = drag == 4 ? "edgeR" : drag == 5 ? "edgeL" : drag == 6 ? "edgeB" : null;
+            if (he == null) { Hit hh = hitAt(mx, my); if (hh != null && hh.id().startsWith("edge")) he = hh.id(); }
+            if ("edgeR".equals(he)) ctx.fill(x + w - 1, y + HEAD + 1, x + w, y + h, TEAL);
+            if ("edgeL".equals(he)) ctx.fill(x, y + HEAD + 1, x + 1, y + h, TEAL);
+            if ("edgeB".equals(he)) ctx.fill(x, y + h - 1, x + w, y + h, TEAL);
+            setCursor(he == null ? 0 : he.equals("edgeB") ? 2 : 1);
+        } else if (focused) setCursor(0);
         if (focused) hits.add(new Hit("head", x, y, x + w, y + HEAD));
     }
 
     /** 작은 삼각형 화살표 (폭 4, 높이 7) - right = ▶ */
+    /** 크기 조절 화살표 ⤡ (왼쪽 위 ↔ 오른쪽 아래, 9x9, 그림자) */
+    static void drawResizeArrow(DrawContext ctx, int x0, int y0, int col) {
+        for (int pass = 0; pass < 2; pass++) {
+            int o = pass == 0 ? 1 : 0, c = pass == 0 ? 0xC0000000 : col;
+            for (int i = 1; i < 8; i++) ctx.fill(x0 + i + o, y0 + i + o, x0 + i + 1 + o, y0 + i + 1 + o, c);       // 대각선
+            for (int i = 0; i < 4; i++) {
+                ctx.fill(x0 + i + o, y0 + o, x0 + i + 1 + o, y0 + 1 + o, c);                                // ↖ 머리
+                ctx.fill(x0 + o, y0 + i + o, x0 + 1 + o, y0 + i + 1 + o, c);
+                ctx.fill(x0 + 8 - i + o, y0 + 8 + o, x0 + 9 - i + o, y0 + 9 + o, c);                        // ↘ 머리
+                ctx.fill(x0 + 8 + o, y0 + 8 - i + o, x0 + 9 + o, y0 + 9 - i + o, c);
+            }
+        }
+    }
+
     static void drawArrow(DrawContext ctx, int ax, int cy, boolean right, int col) {
         for (int i = 0; i < 4; i++) {
             int xx = right ? ax + i : ax + 3 - i;
@@ -365,6 +409,9 @@ public final class ChatWindow {
                 case "gear" -> { settingsOpen = !settingsOpen; click(); return true; }
                 case "lock" -> { c.locked = !c.locked; dirty = true; click(); return true; }
                 case "grip" -> { if (!c.locked) { drag = 2; return true; } }
+                case "edgeR" -> { if (!c.locked) { drag = 4; return true; } }
+                case "edgeL" -> { if (!c.locked) { drag = 5; return true; } }
+                case "edgeB" -> { if (!c.locked) { drag = 6; return true; } }
                 case "head" -> {
                     if (!c.locked) { drag = 1; offX = mx - x; offY = my - y; }
                     return true;
@@ -414,6 +461,20 @@ public final class ChatWindow {
             c.height = bottomEdge - y;
             c.bottom = sh - bottomEdge;
             dirty = true;
+        } else if (drag == 4) {                                    // 오른쪽 테두리: 폭
+            c.width = clamp(mx - x, ChatConfig.MIN_W, sw - x);
+            dirty = true;
+        } else if (drag == 5) {                                    // 왼쪽 테두리: 오른쪽 끝은 그대로
+            int rightEdge = x + w;
+            int nx = clamp(mx, 0, rightEdge - ChatConfig.MIN_W);
+            c.left = nx;
+            c.width = rightEdge - nx;
+            dirty = true;
+        } else if (drag == 6) {                                    // 아래 테두리: 높이
+            int bottomEdge = clamp(my, y + ChatConfig.MIN_H, sh);
+            c.height = bottomEdge - y;
+            c.bottom = sh - bottomEdge;
+            dirty = true;
         } else if (drag == 3 && dragSlider != null) {
             Settings.slide(this, dragSlider, mx);
             dirty = true;
@@ -421,6 +482,7 @@ public final class ChatWindow {
     }
 
     void closed() {
+        setCursor(0);
         drag = 0;
         dragSlider = null;
         scroll = 0;
