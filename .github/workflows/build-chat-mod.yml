@@ -1,5 +1,5 @@
 # chat-mod 폴더 (힐링타운 채팅창 모드 소스) 를 올리거나 고치면
-#  → 모드 jar 를 만들어 mods/ 에 넣고 → 모드 목록 자동 갱신 (update-distro.yml) 까지 실행
+#  → 모드 jar 를 만들어 mods/required/ (필수 · 런처에서 못 끔) 에 넣고 → 모드 목록 자동 갱신 (update-distro.yml) 까지 실행
 #  실패하면: Actions 탭 → '채팅창 모드 빌드' → 빨간 X → build 단계의 오류 글자를 알려 주세요
 name: 채팅창 모드 빌드
 
@@ -44,12 +44,13 @@ jobs:
           name: healingtown-chat
           path: chat-mod/build/libs/*.jar
 
-      - name: mods 폴더에 넣기
+      - name: mods/required 폴더에 넣기 (필수 모드 - 런처에서 못 끔)
         run: |
           rm -f mods/healingtown-chat-*.jar mods/*/healingtown-chat-*.jar
+          mkdir -p mods/required
           for f in chat-mod/build/libs/healingtown-chat-*.jar; do
             case "$f" in *-sources.jar|*-dev.jar) continue;; esac
-            cp "$f" mods/
+            cp "$f" mods/required/
           done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
