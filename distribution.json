@@ -7,7 +7,7 @@
       "name": "힐링타운",
       "description": "느긋하게 자라는 마인크래프트 RPG 서버",
       "icon": "https://m-min-o.github.io/healingtown-files/server-icon.png",
-      "version": "1.0.14",
+      "version": "1.0.15",
       "address": "min346.kro.kr:25565",
       "minecraftVersion": "1.21.4",
       "javaOptions": {
@@ -143,13 +143,13 @@
           }
         },
         {
-          "id": "kr.healingtown.mods:htchat:1.0.6",
+          "id": "kr.healingtown.mods:htchat:1.0.7",
           "name": "힐링타운 채팅창",
           "type": "FabricMod",
           "artifact": {
-            "size": 38583,
-            "MD5": "db91923d51f7454a6b81a076124c1699",
-            "url": "https://m-min-o.github.io/healingtown-files/mods/required/healingtown-chat-1.0.6.jar"
+            "size": 38604,
+            "MD5": "dd53bc3827ef2843dbf96ea00019e991",
+            "url": "https://m-min-o.github.io/healingtown-files/mods/required/healingtown-chat-1.0.7.jar"
           }
         },
         {
