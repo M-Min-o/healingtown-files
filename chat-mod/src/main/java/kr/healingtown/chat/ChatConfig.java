@@ -77,6 +77,9 @@ public class ChatConfig {
         if (rules == null) rules = new LinkedHashMap<>();
         Map<String, List<String>> def = defaultRules();
         for (Map.Entry<String, List<String>> en : def.entrySet()) rules.putIfAbsent(en.getKey(), en.getValue());
+        List<String> ids = List.of(Cat.IDS);          // 없어진 종류 (예: 아이템) 는 설정 파일에서도 뺌 → 그 메시지는 시스템으로
+        rules.keySet().retainAll(ids);
+        inAll.keySet().retainAll(ids);
         if (hide == null) hide = new ArrayList<>(List.of(
                 "Plasmo Voice\\s*의\\s*새\\s*버전",
                 "(?i)new version of Plasmo Voice",
@@ -148,7 +151,6 @@ public class ChatConfig {
         m.put("brag", new ArrayList<>(List.of("^\\[자랑\\]")));
         m.put("notice", new ArrayList<>(List.of("^\\[\\s*공지\\s*\\]", "^\\[\\s*핫타임\\s*\\]")));
         m.put("money", new ArrayList<>(List.of("[0-9][0-9,]*(\\.[0-9]+)?\\s*원", "경험치\\s*\\+", "경험치를\\s*(얻|획득|받)")));
-        m.put("item", new ArrayList<>(List.of("보상:", "획득", "받았습니다")));
         m.put("join", new ArrayList<>(List.of("님이\\s*(접속|퇴장|입장)", "(joined|left) the game", "게임에 (참여|나갔)")));
         m.put("system", new ArrayList<>());
         return m;

@@ -8,7 +8,7 @@ public final class Cat {
     private Cat() {}
 
     public static final String ALL = "all";
-    public static final String[] IDS = {"general", "whisper", "party", "brag", "notice", "money", "item", "join", "system"};
+    public static final String[] IDS = {"general", "whisper", "party", "brag", "notice", "money", "join", "system"};
     public static final Map<String, String> KOR = new LinkedHashMap<>();
     static {
         KOR.put("general", "일반");
@@ -17,13 +17,12 @@ public final class Cat {
         KOR.put("brag", "자랑");
         KOR.put("notice", "공지");
         KOR.put("money", "골드·경험치");
-        KOR.put("item", "아이템");
         KOR.put("join", "접속·퇴장");
         KOR.put("system", "시스템");
     }
 
     /** 탭 순서 (전체 · 공지 먼저) - 골드·경험치는 탭 없음 (전체에는 나옴) */
-    public static final String[] TABS = {ALL, "notice", "general", "whisper", "party", "system", "item", "brag", "join"};
+    public static final String[] TABS = {ALL, "notice", "general", "whisper", "party", "system", "brag", "join"};
 
     public static boolean isTab(String id) {
         for (String t : TABS) if (t.equals(id)) return true;
